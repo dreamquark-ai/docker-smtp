@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:stable-slim
 
 MAINTAINER Oluwaseun Obajobi "oluwaseun.obajobi@namshi.com"
 
