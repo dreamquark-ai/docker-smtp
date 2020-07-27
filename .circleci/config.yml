@@ -1,0 +1,30 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2.1
+jobs:
+  lint:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:12.18.1-buster@sha256:a750e2e1d8f57419e6299206a3a6fab1ac21db324f83a0714bd8e5f22ccbc3d4
+    working_directory: ~/docker-smtp
+    steps:
+      - checkout
+      - run: 
+          name: LintGit
+          command: |
+            sudo echo ${CIRCLE_BRANCH}
+            sudo npm i -g commitlint @commitlint/config-conventional
+            sudo echo "module.exports = { extends:[\"@commitlint/config-conventional\"] }" > commitlint.config.js
+            sudo echo ${CIRCLE_BRANCH} | grep -Eqv "^(feature/|bugfix/|hotfix/|release/)" && echo "Wrong branch name, please use feature/, bugfix/, hotfix/ or release/ as prefix ${CIRCLE_BRANCH}" && exit 1
+            commitlint --config ./commitlint.config.js --to $(git rev-parse origin/${CIRCLE_BRANCH}) --from $(git rev-parse origin/develop)
+
+workflows:
+  CI-docker-smtp:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              ignore:
+              - master
