@@ -1,7 +1,7 @@
 FROM debian:stable-slim@sha256:05f7608c53541eab93132a7ed1de94f6881d1041b16a91e3294068e05ceba546
 
 RUN apt-get update && \
-    apt-get install -y exim4-daemon-light && \
+    apt-get install -y exim4-daemon-light iproute2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     find /var/log -type f | while read f; do echo -ne '' > $f; done;
