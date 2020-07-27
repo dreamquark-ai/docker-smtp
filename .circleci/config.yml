@@ -20,6 +20,25 @@ jobs:
             sudo echo ${CIRCLE_BRANCH} | grep -Eqv "^(feature/|bugfix/|hotfix/|release/)" && echo "Wrong branch name, please use feature/, bugfix/, hotfix/ or release/ as prefix ${CIRCLE_BRANCH}" && exit 1
             commitlint --config ./commitlint.config.js --to $(git rev-parse origin/${CIRCLE_BRANCH}) --from $(git rev-parse origin/develop)
 
+  deploy_docker_hub:
+    docker:
+      - image: dreamquark/docker:3958c08@sha256:d21624e128a5fe346b7f4be7e509ab9e4cab52a31539e1a700c3b487f608cfdf
+    working_directory: ~/docker-smtp
+    resource_class: small
+    parameters:
+      docker_tag:
+          type: string
+          default: latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build image & deploy on docker-hub
+          command: |
+            docker login -u "$REGISTRY_LOGIN" -p "$REGISTRY_TOKEN"
+            docker build -t dreamquark/smtp:<< parameters.docker_tag >> .
+            docker push dreamquark/smtp:<< parameters.docker_tag >>
+
 workflows:
   CI-docker-smtp:
     jobs:
@@ -28,3 +47,21 @@ workflows:
             branches:
               ignore:
               - master
+      - deploy_docker_hub:
+          context: dockerhub
+          filters:
+            branches:
+              only:
+                - develop
+
+  CI-docker-smtp-release:
+    jobs:
+      - deploy_docker_hub:
+          context: dockerhub
+          docker_tag: $CIRCLE_TAG
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+

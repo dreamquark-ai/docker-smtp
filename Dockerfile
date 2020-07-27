@@ -1,7 +1,5 @@
 FROM debian:stable-slim
 
-MAINTAINER Oluwaseun Obajobi "oluwaseun.obajobi@namshi.com"
-
 RUN apt-get update && \
     apt-get install -y exim4-daemon-light && \
     apt-get clean && \
