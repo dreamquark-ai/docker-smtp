@@ -47,6 +47,7 @@ workflows:
             branches:
               ignore:
               - master
+              - develop
       - deploy_docker_hub:
           context: dockerhub
           filters:
