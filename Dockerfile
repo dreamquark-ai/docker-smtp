@@ -1,4 +1,4 @@
-FROM debian:stable-slim@sha256:05f7608c53541eab93132a7ed1de94f6881d1041b16a91e3294068e05ceba546
+FROM debian:stable-slim@sha256:c3ece0d2c3b4f1645a12c6c90596431e6b4c88d9137370f21ad6cb2d7271d553
 
 RUN apt-get update && \
     apt-get install -y exim4-daemon-light iproute2 && \
