@@ -7,7 +7,7 @@ jobs:
   lint:
     docker:
       # specify the version you desire here
-      - image: circleci/node:14.11.0-buster@sha256:3392a569c20fc0b7eb5fe8b889f493cc38c50be18bd4fe47bee7dee088950b28
+      - image: circleci/node:15.10.0-buster@sha256:84f8d3c8579c0bde8b0a703c90fdd6c9581764004b4ed2f7268a7a5a191e3c8d
     working_directory: ~/docker-smtp
     steps:
       - checkout
